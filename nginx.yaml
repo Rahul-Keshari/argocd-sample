@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: test
+  namespace: argocd
+spec:
+  syncPolicy:
+    preserveResourcesOnDeletion: true
+  generators:
+  - list:
+      elements:
+        - name: nginx 
+  template:
+    metadata:
+      name: '{{name}}'    
+    spec:
+      project: default
+      syncPolicy:
+        automated:
+          prune: true
+      source:
+        repoURL: https://github.com/Rahul-Keshari/argocd-sample
+        targetRevision: main
+        path: nginx
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: test
